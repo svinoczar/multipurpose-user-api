@@ -9,14 +9,17 @@ import java.time.LocalDateTime;
 @Data
 @Table("users")
 @Builder(toBuilder = true)
-@NoArgsConstructor
+//@NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class UserEntity {
     @Id
     private Long id;
+    @NonNull
     private String username;
+    @NonNull
     private String password;
+    @NonNull
     private UserRole userRole;
     private String firstName;
     private String lastName;
