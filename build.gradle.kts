@@ -48,6 +48,10 @@ dependencies {
     testImplementation("org.springframework.kafka:spring-kafka-test")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     testImplementation("org.springframework.security:spring-security-test")
+
+
+
+    implementation("org.mapstruct:mapstruct:1.6.0.Beta1")
 }
 
 tasks.withType<Test> {
