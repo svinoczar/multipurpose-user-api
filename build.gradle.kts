@@ -39,19 +39,22 @@ dependencies {
     implementation("org.springframework.kafka:spring-kafka")
     implementation("org.springframework.session:spring-session-data-redis")
     implementation("org.springframework.session:spring-session-jdbc")
+
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("org.postgresql:postgresql")
+
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.projectlombok:lombok")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.kafka:spring-kafka-test")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     testImplementation("org.springframework.security:spring-security-test")
 
 
-
     implementation("org.mapstruct:mapstruct:1.6.0.Beta1")
+    implementation("io.jsonwebtoken:jjwt:0.2")
 }
 
 tasks.withType<Test> {
