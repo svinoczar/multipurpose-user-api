@@ -3,6 +3,7 @@ package io.svinoczar.api.security;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.svinoczar.api.entity.UserEntity;
+import io.svinoczar.api.exception.AuthException;
 import io.svinoczar.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,17 +62,17 @@ public class SecurityService {
         return userRepository.findByUsername(username) //todo: change Jpa repo to NIO repo (r2dbc or smth)
                 .flatMap( user -> {
                     if(!user.isEnabled()) {
-                        return Mono.error(new RuntimeException("")); //todo: change exception to custom
+                        return Mono.error(new AuthException("Account disabled", "USER_ACCOUNT_DISABLED"));
                     }
 
                     if(passwordEncoder.matches(password, user.getPassword())) {
-                        return Mono.error(new RuntimeException("")); //todo: change exception to custom
+                        return Mono.error(new AuthException("Invalid password", "INVALID_PASSWORD"));
                     }
 
                     return Mono.just(generateToken(user).toBuilder()
                             .userId(user.getId())
                             .build());
                 })
-                .switchIfEmpty(Mono.error(new RuntimeException(""))); //todo: change exception to custom
+                .switchIfEmpty(Mono.error(new AuthException("Invalid username", "INVALID_USERNAME")));
     }
 }
