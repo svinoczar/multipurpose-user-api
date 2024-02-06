@@ -2,8 +2,9 @@ package io.svinoczar.api.repository;
 
 import io.svinoczar.api.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import reactor.core.publisher.Mono;
 
-public interface UserRepository extends JpaRepository<UserEntity, Long> { //todo: change Jpa repo to NIO repo (r2dbc or smth)
+public interface UserRepository extends R2dbcRepository<UserEntity, Long> {
     Mono<UserEntity> findByUsername(String username);
 }
