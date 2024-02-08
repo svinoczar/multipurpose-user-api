@@ -20,9 +20,14 @@ public class UserEntity {
     private String password;
     @NonNull
     private UserRole userRole;
+
     private String firstName;
     private String lastName;
     private String email;
+
+    private Float xp;
+    private Integer level;
+
     private boolean enabled;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
