@@ -7,9 +7,8 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.time.LocalDateTime;
 
 @Data
-@Table("users")
+@Table("${user.table-name}")
 @Builder(toBuilder = true)
-//@NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class UserEntity {
