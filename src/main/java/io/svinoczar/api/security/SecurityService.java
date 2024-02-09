@@ -4,7 +4,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.svinoczar.api.entity.UserEntity;
 import io.svinoczar.api.exception.AuthException;
-import io.svinoczar.api.repository.UserRepository;
+import io.svinoczar.api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,7 +16,7 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class SecurityService {
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
     @Value("${jwt.secret}")
@@ -60,7 +60,7 @@ public class SecurityService {
     }
 
     public Mono<TokenDetails> authenticate(String username, String password) {
-        return userRepository.findByUsername(username) //todo: change Jpa repo to NIO repo (r2dbc or smth)
+        return userService.getUserByUsername(username) //todo: change Jpa repo to NIO repo (r2dbc or smth)
                 .flatMap( user -> {
                     if(!user.isEnabled()) {
                         return Mono.error(new AuthException("Account disabled", "USER_ACCOUNT_DISABLED"));

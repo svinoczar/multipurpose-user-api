@@ -4,7 +4,8 @@ import io.svinoczar.api.dto.RewardDTO;
 import io.svinoczar.api.dto.UserDTO;
 import io.svinoczar.api.entity.*;
 import io.svinoczar.api.exception.RewardException;
-import io.svinoczar.api.repository.UserRepository;
+import io.svinoczar.api.mapper.UserMapper;
+import io.svinoczar.api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
@@ -12,8 +13,8 @@ import reactor.core.publisher.Mono;
 @Service
 @RequiredArgsConstructor
 public class ExperienceService {
-    private final UserRepository userRepository;
-    private final DefaultUserMapper defaultUserMapper;
+    private final UserService userService;
+    private final UserMapper userMapper;
     private void addExperiencePoints(UserDTO dto, int xp) {
         /*
         -
@@ -22,9 +23,9 @@ public class ExperienceService {
         -
         -
         **/
-        UserEntity user = defaultUserMapper.map(dto);
-        user.setXp(user.getXp() + xp);
-        userRepository.save(user).subscribe(); //todo: remove subscribe, rewrite save block
+        UserEntity user = userMapper.map(dto);
+        dto.setXp(dto.getXp() + xp);
+        userService.updateUser(user).subscribe(); //todo: remove subscribe, rewrite save block
     }
 
     public Mono<Response> reward(RewardRequest request) {
