@@ -56,6 +56,7 @@ dependencies {
     implementation("org.mapstruct:mapstruct:1.6.0.Beta1")
     implementation("io.jsonwebtoken:jjwt:0.2")
     implementation("org.springframework.data:spring-data-r2dbc:3.2.2")
+    implementation("org.springframework:spring-webflux:6.1.3")
 }
 
 tasks.withType<Test> {
