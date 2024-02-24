@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class RewardDTO {
     private Long id;
     private Integer value; //can be negative
+    private UserDTO userId;
     private RewardReason rewardReason;
-    private boolean isVisible;
     private LocalDateTime claimedAt; //todo: rename
 }

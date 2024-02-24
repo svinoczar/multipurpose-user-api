@@ -15,7 +15,7 @@ import java.util.*;
 
 @Service
 @RequiredArgsConstructor
-public class SecurityService {
+public class    SecurityService {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 

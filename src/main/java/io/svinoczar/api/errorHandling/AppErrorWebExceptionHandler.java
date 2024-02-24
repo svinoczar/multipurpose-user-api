@@ -1,5 +1,6 @@
 package io.svinoczar.api.errorHandling;
 
+import lombok.NonNull;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler;
 

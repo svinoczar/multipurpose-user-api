@@ -25,20 +25,31 @@ repositories {
 extra["snippetsDir"] = file("build/generated-snippets")
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-data-cassandra")
-    implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot:spring-boot-starter-data-redis")
-    implementation("org.springframework.boot:spring-boot-starter-data-rest")
-    implementation("org.springframework.boot:spring-boot-starter-jdbc")
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-authorization-server")
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
-    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.kafka:spring-kafka")
-    implementation("org.springframework.session:spring-session-data-redis")
-    implementation("org.springframework.session:spring-session-jdbc")
+    implementation("org.springframework.session:spring-session-core")
+    implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
+    
+    implementation("io.r2dbc:r2dbc-postgresql:0.8.13.RELEASE")
+    implementation("org.postgresql:postgresql:42.6.0")
+
+    implementation("org.flywaydb:flyway-core:9.17.0")
+    implementation("com.google.code.findbugs:jsr305:3.0.2")
+
+    implementation("org.mapstruct:mapstruct:1.6.0.Beta1")
+
+    implementation("io.jsonwebtoken:jjwt:0.9.1")
+    implementation("javax.xml.bind:jaxb-api:2.2.4")
+
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+//    implementation("org.springframework.boot:spring-boot-starter-data-cassandra")
+//    implementation("org.springframework.boot:spring-boot-starter-data-redis")
+//    implementation("org.springframework.boot:spring-boot-starter-data-rest")
+//    implementation("org.springframework.boot:spring-boot-starter-oauth2-authorization-server")
+//    implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+//    implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+//    implementation("org.springframework.kafka:spring-kafka")
+//    implementation("org.springframework.session:spring-session-data-redis")
 
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
@@ -46,17 +57,12 @@ dependencies {
 
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     annotationProcessor("org.projectlombok:lombok")
+    annotationProcessor("org.mapstruct:mapstruct-processor:1.6.0.Beta1")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("org.springframework.kafka:spring-kafka-test")
+//    testImplementation("org.springframework.kafka:spring-kafka-test")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     testImplementation("org.springframework.security:spring-security-test")
-
-
-    implementation("org.mapstruct:mapstruct:1.6.0.Beta1")
-    implementation("io.jsonwebtoken:jjwt:0.2")
-    implementation("org.springframework.data:spring-data-r2dbc:3.2.2")
-    implementation("org.springframework:spring-webflux:6.1.3")
 }
 
 tasks.withType<Test> {

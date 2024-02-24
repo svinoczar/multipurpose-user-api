@@ -4,7 +4,6 @@ import io.svinoczar.api.dto.RewardDTO;
 import lombok.*;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)

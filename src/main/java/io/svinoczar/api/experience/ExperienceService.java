@@ -28,10 +28,10 @@ public class ExperienceService {
         userService.updateUser(user).subscribe(); //todo: remove subscribe, rewrite save block
     }
 
-    public Mono<Response> reward(RewardRequest request) {
-        RewardDTO reward = request.getRewardDTO(); //todo: finish
-
-        addExperiencePoints(request.getUser(), reward.getValue());
+    public Mono<Response> reward(RewardDTO dto) {
+//        addExperiencePoints(dto.getUserId(), reward.getValue());
+        UserEntity user = userMapper.map(dto.getUserId());
+        dto.getUserId().setXp(dto.getUserId().getXp() + dto.getValue());
         return Mono.just(new Response())
                 .onErrorResume(e -> Mono.error(new RewardException(e.getMessage())));
     }
