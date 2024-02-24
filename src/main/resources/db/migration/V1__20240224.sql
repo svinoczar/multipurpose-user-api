@@ -2,7 +2,7 @@ CREATE TABLE users (
     id serial PRIMARY KEY,
     username VARCHAR(64) NOT NULL UNIQUE,
     password VARCHAR(2048) NOT NULL,
-    role VARCHAR(32) NOT NULL,
+    user_role VARCHAR(32) NOT NULL,
     
     first_name VARCHAR(64),
     last_name VARCHAR(64),

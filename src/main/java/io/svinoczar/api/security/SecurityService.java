@@ -59,14 +59,15 @@ public class    SecurityService {
                         .build();
     }
 
+
     public Mono<TokenDetails> authenticate(String username, String password) {
-        return userService.getUserByUsername(username) //todo: change Jpa repo to NIO repo (r2dbc or smth)
-                .flatMap( user -> {
-                    if(!user.isEnabled()) {
+        return userService.getUserByUsername(username)
+                .flatMap(user -> {
+                    if (!user.isEnabled()) {
                         return Mono.error(new AuthException("Account disabled", "USER_ACCOUNT_DISABLED"));
                     }
 
-                    if(passwordEncoder.matches(password, user.getPassword())) {
+                    if (!passwordEncoder.matches(password, user.getPassword())) {
                         return Mono.error(new AuthException("Invalid password", "INVALID_PASSWORD"));
                     }
 

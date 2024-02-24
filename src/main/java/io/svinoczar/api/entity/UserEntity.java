@@ -7,10 +7,10 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.time.LocalDateTime;
 
 @Data
-@Table("${user.table-name}")
+@Table("users")
 @Builder(toBuilder = true)
+@NoArgsConstructor
 @AllArgsConstructor
-@RequiredArgsConstructor
 public class UserEntity {
     @Id
     private Long id;
@@ -18,7 +18,6 @@ public class UserEntity {
     private String username;
     @NonNull
     private String password;
-    @NonNull
     private UserRole userRole;
 
     private String firstName;

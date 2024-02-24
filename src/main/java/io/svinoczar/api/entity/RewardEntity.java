@@ -10,7 +10,7 @@ import org.springframework.data.annotation.Id;
 import java.time.LocalDateTime;
 
 @Data
-@Table(name = "reward")
+@Table(name = "rewards")
 @Builder( toBuilder = true )
 @AllArgsConstructor
 @NoArgsConstructor
