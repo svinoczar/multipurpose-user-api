@@ -1,11 +1,13 @@
 package io.svinoczar.api.rest;
 
-import io.svinoczar.api.dto.RewardDTO;
-import io.svinoczar.api.entity.Response;
-import io.svinoczar.api.entity.RewardRequest;
+import io.svinoczar.api.dto.RewardRequestDTO;
+import io.svinoczar.api.dto.RewardResponseDTO;
+import io.svinoczar.api.exception.RewardException;
 import io.svinoczar.api.experience.ExperienceService;
+import io.svinoczar.api.mapper.RewardMapper;
+import io.svinoczar.api.mapper.UserMapper;
+import io.svinoczar.api.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,9 +19,19 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/api/v1/xp")
 public class ExperienceRestControllerV1 {
     private final ExperienceService experienceService;
+    private final RewardMapper rewardMapper;
+    private final UserService userService;
+    private final UserMapper userMapper;
 
-    @PostMapping("/reward")
-    public Mono<Response> reward(@RequestBody RewardDTO dto) {
-        return experienceService.reward(dto); //todo: check what need to use just Mono or ResponseEntity
+    @PostMapping("/testReward")
+    public Mono<RewardResponseDTO> testReward(@RequestBody RewardRequestDTO dto) {
+        return experienceService.reward(dto)
+                        .onErrorResume(e -> Mono.error(new RewardException(e.getMessage())));
+    }
+
+    @PostMapping("/test")
+    public Mono<RewardResponseDTO> test(@RequestBody RewardRequestDTO dto) {
+        return experienceService.reward(dto)
+                .onErrorResume(e -> Mono.error(new RewardException(e.getMessage())));
     }
 }

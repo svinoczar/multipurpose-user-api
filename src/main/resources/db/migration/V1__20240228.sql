@@ -18,9 +18,13 @@ CREATE TABLE users (
 
 CREATE TABLE rewards (
     id SERIAL PRIMARY KEY,
-    value INTEGER NOT NULL,
-    reward_reason VARCHAR(128) NOT NULL,
+    value BIGINT NOT NULL,
+    reward_reason VARCHAR(64) NOT NULL,
     reward_description VARCHAR(1024) DEFAULT 'default reason',
-    is_visible BOOLEAN NOT NULL DEFAULT FALSE,
-    received_at TIMESTAMP
+
+    rewarded_user_id SERIAL references users(id),
+    received_at TIMESTAMP,
+
+    valid BOOLEAN NOT NULL DEFAULT TRUE,
+    is_visible BOOLEAN NOT NULL DEFAULT FALSE
 );

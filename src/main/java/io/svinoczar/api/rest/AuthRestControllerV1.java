@@ -32,7 +32,7 @@ public class AuthRestControllerV1 {
     public Mono<AuthResponseDTO> login(@RequestBody AuthRequestDTO dto) {
         return securityService.authenticate(dto.getUsername(), dto.getPassword())
                 .flatMap(tokenDetails -> Mono.just(
-                        AuthResponseDTO.builder()
+                        AuthResponseDTO.authResponseBuilder()
                                 .userId(tokenDetails.getUserId())
                                 .token(tokenDetails.getToken())
                                 .issuedAt(tokenDetails.getIssuedAt())
