@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Slf4j
 @Service
@@ -25,8 +26,8 @@ public class UserService {
                         .password(passwordEncoder.encode(user.getPassword()))
                         .userRole(UserRole.USER)
                         .enabled(true)
-                        .createdAt(LocalDateTime.now())
-                        .updatedAt(LocalDateTime.now())
+                        .createdAt(OffsetDateTime.now())
+                        .updatedAt(OffsetDateTime.now())
                         .build()
         ).doOnSuccess(u -> {
             log.info("user: {} created in `registerUser`", u);
@@ -44,12 +45,13 @@ public class UserService {
                         .xp(user.getXp())
                         .level(user.getLevel())
                         .enabled(user.isEnabled())
-                        .updatedAt(LocalDateTime.now())
+                        .updatedAt(OffsetDateTime.now())
                         .build()
         ).doOnSuccess(u -> {
-            log.info("user: {} updated in `updateUser`", u);
+            log.info("USER: (id={}, username={}) UPDATED.", u.getId(), u.getUsername());
         });
     }
+
 
     public Mono<UserEntity> getUserById(Long id) {
         return userRepository.findById(id);

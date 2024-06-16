@@ -6,9 +6,9 @@ import jakarta.persistence.ManyToOne;
 import org.springframework.data.relational.core.mapping.Table;
 import lombok.*;
 import org.springframework.data.annotation.Id;
-import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Data
 @Table(name = "rewards")
@@ -19,12 +19,12 @@ public class RewardEntity {
     @Id
     private Long id;
     private Float value;
-    private String rewardReason;
-    private String rewardDescription;
+    private RewardReason reason;
+    private String description;
     @ManyToOne
     @JoinColumn(name = "rewarded_user_id")
     private Long rewardedUserId;
-    private LocalDateTime receivedAt;
+    private OffsetDateTime receivedAt;
     private boolean valid;
     private boolean isVisible;
 }

@@ -16,6 +16,7 @@ import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.OffsetDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -26,25 +27,21 @@ public class ExperienceService {
     private final UserMapper userMapper;
     private final AuthenticationManager authenticationManager;
 
-//    public Mono<RewardResponseDTO> reward(RewardRequestDTO dto) {
-//        RewardEntity entity = new RewardEntity().toBuilder()
-//                .value(dto.getValue())
-//                .rewardReason(dto.getReason())
-//                .rewardDescription(dto.getDescription())
-//                .rewardedUser(new UserEntity())
-//                .receivedAt(LocalDateTime.now())
-//                .build();
-//        rewardService.registerReward(entity, Long userId);
-//        RewardResponseDTO response = RewardResponseDTO.rewardResponseBuilder()
-//                .value(entity.getValue())
-//                .reason(entity.getRewardReason())
-//                .rewardedUserName(dto.getRewardedUserName())
-//                .receivedAt(LocalDateTime.now())
-//                .valid(true)
-//                .isVisible(true) //todo: change method to set visibility
-//                .build();
-//        return Mono.just(response)
-//                .onErrorResume(e -> Mono.error(new RewardException(e.getMessage())));
+//    public Mono<RewardResponseDTO> updateXp(RewardRequestDTO dto) {
+////        Float currentXp = 0f;
+//        var u = userService.getUserById(dto.getRewardedUserId()).doOnSuccess(user -> {
+//            var currentXp = user.getXp();
+//            user.setXp(currentXp + dto.getValue());
+//            userService.updateUser(user);
+//        }).flatMap(user -> Mono.just(
+//                RewardResponseDTO.rewardResponseBuilder()
+//                        .value(dto.getValue())
+//                        .reason(dto.getReason())
+//                        .rewardedUserName(user.getUsername())
+//                        .receivedAt(OffsetDateTime.now())
+//                        .valid(false)
+//                        .isVisible(false)
+//                        .build()));
 //    }
 
 }

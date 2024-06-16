@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Data
 @Builder(toBuilder = true)
@@ -16,7 +17,7 @@ public class RewardDTO {
     private RewardReason reason;
     private String description;
     private Long rewardedUserId;
-    private LocalDateTime receivedAt;
+    private OffsetDateTime receivedAt;
     private boolean valid;
     private boolean isVisible;
 }

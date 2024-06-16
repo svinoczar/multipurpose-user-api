@@ -8,5 +8,5 @@ import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import reactor.core.publisher.Mono;
 
 public interface RewardRepository extends R2dbcRepository<RewardEntity, Long> {
-        Mono<RewardEntity> findAllByRewardReason(RewardReason reason);
+        Mono<RewardEntity> findAllByReason(RewardReason reason);
 }

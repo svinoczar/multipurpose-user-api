@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 public enum RewardReason {
     // REWARDS:
     TEST_REWARD,
+    TIMEZONE_TEST_REWARD,
     ACTIVITY,
     VISIT,
     BUG_REPORT,
