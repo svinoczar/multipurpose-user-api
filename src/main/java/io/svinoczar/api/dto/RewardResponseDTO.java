@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Data
 @Builder(builderMethodName = "rewardResponseBuilder")
@@ -16,9 +17,9 @@ import java.time.LocalDateTime;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class RewardResponseDTO extends Response {
     private Float value;
-    private RewardReason reason;
+    private String reason;
     private String rewardedUserName;
-    private LocalDateTime rewardedAt;
+    private LocalDateTime receivedAt;
     private boolean valid;
     private boolean isVisible;
 }

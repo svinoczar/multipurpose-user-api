@@ -15,7 +15,7 @@ public class RewardDTO {
     private Float value;
     private RewardReason reason;
     private String description;
-    private UserDTO rewardedUserId;
+    private Long rewardedUserId;
     private LocalDateTime receivedAt;
     private boolean valid;
     private boolean isVisible;

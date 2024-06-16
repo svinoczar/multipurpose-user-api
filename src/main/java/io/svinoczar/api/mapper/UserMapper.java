@@ -4,6 +4,7 @@ import io.svinoczar.api.dto.UserDTO;
 import io.svinoczar.api.entity.UserEntity;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
+import reactor.core.publisher.Mono;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {

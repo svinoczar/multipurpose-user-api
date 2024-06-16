@@ -3,6 +3,7 @@ package io.svinoczar.api.service;
 import io.svinoczar.api.entity.UserEntity;
 import io.svinoczar.api.entity.UserRole;
 import io.svinoczar.api.repository.UserRepository;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;

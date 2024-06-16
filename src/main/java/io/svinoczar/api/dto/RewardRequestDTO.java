@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class RewardRequestDTO {
     private Float value;
-    private RewardReason reason;
+    private String reason;
     private String description;
     private String rewardedUserName;
     private Long rewardedUserId;

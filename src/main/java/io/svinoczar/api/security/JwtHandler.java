@@ -15,7 +15,7 @@ import java.util.Map;
 public class JwtHandler {
 
     private final String secret;
-//    HashMap
+
     public JwtHandler(String secret) {
         this.secret = secret;
     }
@@ -28,7 +28,7 @@ public class JwtHandler {
     private VerificationResult verify(String token) {
         Claims claims = getClaimsFromToken(token);
         final Date expirationDate = claims.getExpiration();
-        System.out.println(expirationDate);
+//        System.out.println(expirationDate);
 
         if(expirationDate.before(new Date())) throw new RuntimeException("Token expired");
 
@@ -36,7 +36,7 @@ public class JwtHandler {
     }
 
     private Claims getClaimsFromToken(String token) {
-        System.out.println("TOKEN IN `getClaimsFromToken`: " + token);
+//        System.out.println("TOKEN IN `getClaimsFromToken`: " + token);
         try {
             Claims result = Jwts.parser()
                     .setSigningKey(Base64.getEncoder().encodeToString(secret.getBytes()))

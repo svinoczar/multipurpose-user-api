@@ -1,12 +1,12 @@
 package io.svinoczar.api.entity;
 
-import io.svinoczar.api.dto.UserDTO;
 import jakarta.persistence.JoinColumn;
+
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import org.springframework.data.relational.core.mapping.Table;
 import lombok.*;
 import org.springframework.data.annotation.Id;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 
@@ -19,10 +19,11 @@ public class RewardEntity {
     @Id
     private Long id;
     private Float value;
-    private RewardReason rewardReason;
+    private String rewardReason;
     private String rewardDescription;
-    @JoinColumn
-    private UserEntity rewardedUserId;
+    @ManyToOne
+    @JoinColumn(name = "rewarded_user_id")
+    private Long rewardedUserId;
     private LocalDateTime receivedAt;
     private boolean valid;
     private boolean isVisible;
