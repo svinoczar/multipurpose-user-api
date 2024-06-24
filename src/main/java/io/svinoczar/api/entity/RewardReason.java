@@ -11,9 +11,11 @@ public enum RewardReason {
     BUG_REPORT,
     BUG_REPORT_CONFIRMED,
     DONATION,
+    OTHER,
+    //TODO: ВЫНЕСТИ В БД
 
-    TEST_FINE,
     // FINES:
+    TEST_FINE,
     INACTIVITY,
     BUG_ABUSE,
     MULTI_ACC,

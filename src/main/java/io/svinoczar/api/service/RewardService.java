@@ -23,7 +23,7 @@ import java.time.*;
 @RequiredArgsConstructor
 public class RewardService {
     private final RewardRepository rewardRepository;
-//    private final ExperienceService experienceService;
+    private final ExperienceService experienceService;
     private final UserService userService;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -47,6 +47,7 @@ public class RewardService {
                             .doOnSuccess(user -> {
                                 var currentXp = user.getXp();
                                 user.setXp(currentXp + savedReward.getValue());
+                                user = experienceService.updateLevel(user);
                                 userService.updateUser(user).subscribe();
                             })
                             .flatMap(user -> Mono.just(
