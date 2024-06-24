@@ -33,28 +33,35 @@ public class ExperienceService {
 
     private Integer startLevel = startLevelIs0 ? 0 : 1;
 
+    //TODO: Переделать логику experience.level.step.alt, т.к. иначе придется полностью переписывать логику подсчета опыта для MONO, LINEAR и EXP
     public UserEntity updateLevel(UserEntity user) {
         int level = user.getLevel();
         float xp = user.getXp();
+        Pair<Integer, Float> levelXp = Pair.of(level, xp) ;
+
         switch (levelStepType) {
             case MONO ->  user.setLevel((int) (xp / levelStep)); //DONE
-            case LINEAR -> user.setLevel(expProcessor(levelStepType, startLevel, startXp, startXp, Pair.of(level, xp)).getFirst()); //DONE
-            case EXP -> user.setLevel(expProcessor(levelStepType, startLevel, startXp, startXp, Pair.of(level, xp)).getFirst()); //DONE
-            case CUSTOM ->  user.setLevel(handleCustomLevelStep(custom).get(0)); //TODO: Finish
+            case LINEAR -> user.setLevel(calcLevel(levelStepType, startLevel, startXp, startXp, levelXp).getFirst()); //DONE
+            case EXP -> user.setLevel(calcLevel(levelStepType, startLevel, startXp, startXp, levelXp).getFirst()); //DONE
+            case CUSTOM ->  {
+                Map<Integer, Float> levelMap = handleCustomLevelStep(custom);
+                user.setLevel(calcLevel(levelStepType, startLevel, levelMap.get(startLevel), levelMap.get(startLevel), levelXp, levelMap).getFirst());
+            } //DONE
             default -> user.setLevel(level);
         }
         return user;
     }
 
-    private Map<Float, Integer> handleCustomLevelStep(String custom) {
+    private Map<Integer, Float> handleCustomLevelStep(String custom) {
+        //TODO: Реализовать обработку случаев типа 5-10:alt
         return Arrays.stream(custom
                         .replaceAll("[{}]", "")
                         .strip()
                         .split(", "))
                 .map(element -> element.split(":"))
                 .collect(Collectors.toMap(
-                        keyValue -> Float.parseFloat(keyValue[1]),
-                        keyValue -> Integer.parseInt(keyValue[0])
+                        keyValue -> Integer.parseInt(keyValue[0]),
+                        keyValue -> Float.parseFloat(keyValue[1])
                 ));
     }
 
@@ -67,11 +74,13 @@ public class ExperienceService {
     }
 
 
-    private Pair<Integer, Pair<Float, Float>> expProcessor(LevelStepType type, Integer lvl, Float prevLevelXp, Float sumLevelXp, Pair<Integer, Float> userData) {
+    private Pair<Integer, Pair<Float, Float>> calcLevel(LevelStepType type, Integer lvl,
+                                                        Float prevLevelXp, Float sumLevelXp,
+                                                        Pair<Integer, Float> userData, Map<Integer, Float>... levelMap) {
         switch (type) {
             case LINEAR -> {
                 return (sumLevelXp + prevLevelXp + 2 * levelStep <= userData.getSecond())
-                        ? expProcessor(type, lvl++,prevLevelXp + levelStep, sumLevelXp + prevLevelXp + levelStep, userData)
+                        ? calcLevel(type, lvl++,prevLevelXp + levelStep, sumLevelXp + prevLevelXp + levelStep, userData)
                         : Pair.of(lvl++, Pair.of(prevLevelXp + levelStep, sumLevelXp + prevLevelXp + levelStep));
             }
             //                                  lvl:2   xp:800
@@ -83,7 +92,7 @@ public class ExperienceService {
             // 5.                400 + 100 = 500            1000 + 500 = 1500
             case EXP -> {
                 return (sumLevelXp + prevLevelXp * levelStep * levelStep <= userData.getSecond())
-                    ? expProcessor(type, lvl++,prevLevelXp * levelStep, sumLevelXp + prevLevelXp * levelStep, userData)
+                    ? calcLevel(type, lvl++,prevLevelXp * levelStep, sumLevelXp + prevLevelXp * levelStep, userData)
                     : Pair.of(lvl++, Pair.of(prevLevelXp * levelStep, sumLevelXp + prevLevelXp * levelStep));
             }
             //                                  lvl:2   xp:800
@@ -93,8 +102,21 @@ public class ExperienceService {
             // 3.                200 x 2 = 400             300 + 400 = 700
             // 4.                400 x 2 = 800             700 + 800 = 1500
             // 5.                800 x 2 = 1600            1500 + 1600 = 3100
+            case CUSTOM -> {
+                return (sumLevelXp + prevLevelXp <= userData.getSecond())
+                        ? calcLevel(type, lvl++, levelMap[0].get(lvl++), sumLevelXp + prevLevelXp, userData, levelMap)
+                        : Pair.of(lvl++, Pair.of(prevLevelXp, sumLevelXp + prevLevelXp));
+            }
+            //            {0:0, 1:1000, 2:1500, 3:2000, 4:2500, 5:5000, 1-10:1000}
+            //                                  lvl:2   xp:4600
+            //                    prevLevelXp                 sumLevelXp
+            // 1.                    1000                        1000
+            // 2.                    1500                1000 + 1500 = 2500
+            // 3.                    2000                2500 + 2000 = 4500
+            // 4.                    2500                4500 + 2500 = 7000
+            // 5.                    5000                7000 + 5000 = 12000
         }
-        return null;
+        return Pair.of(userData.getFirst(), Pair.of(prevLevelXp, sumLevelXp)); //TODO: Изменить prevLevelXp и sumLevelXp на что-то типа null или значений опыта юзера
     }
 
     public void setLevelProperties(LevelStepType levelStepType, Float levelStep, Float startLevel, UserEntity user) {
