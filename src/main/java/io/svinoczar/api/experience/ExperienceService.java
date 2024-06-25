@@ -33,7 +33,7 @@ public class ExperienceService {
 
     private Integer startLevel = startLevelIs0 ? 0 : 1;
 
-    //TODO: Переделать логику experience.level.step.alt, т.к. иначе придется полностью переписывать логику подсчета опыта для MONO, LINEAR и EXP
+    //TODO: Теперь custom при выходе за мапу уровней начинает считать, что каждый уровень стоит levelStep xp.
     public UserEntity updateLevel(UserEntity user) {
         int level = user.getLevel();
         float xp = user.getXp();
@@ -104,7 +104,8 @@ public class ExperienceService {
             // 5.                800 x 2 = 1600            1500 + 1600 = 3100
             case CUSTOM -> {
                 return (sumLevelXp + prevLevelXp <= userData.getSecond())
-                        ? calcLevel(type, lvl++, levelMap[0].get(lvl++), sumLevelXp + prevLevelXp, userData, levelMap)
+                        ? calcLevel(type, lvl++, (levelMap[0].containsKey(lvl++) ? levelMap[0].get(lvl++) : levelStep),
+                        sumLevelXp + prevLevelXp, userData, levelMap)
                         : Pair.of(lvl++, Pair.of(prevLevelXp, sumLevelXp + prevLevelXp));
             }
             //            {0:0, 1:1000, 2:1500, 3:2000, 4:2500, 5:5000, 1-10:1000}
