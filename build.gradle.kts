@@ -63,6 +63,7 @@ dependencies {
 //    testImplementation("org.springframework.kafka:spring-kafka-test")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     testImplementation("org.springframework.security:spring-security-test")
+    testImplementation("org.mockito:mockito-core:5.11.0")
 }
 
 tasks.withType<Test> {

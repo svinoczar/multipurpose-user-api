@@ -2,6 +2,7 @@ package io.svinoczar.api.experience;
 
 import io.svinoczar.api.entity.UserEntity;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,8 +16,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
 @RequiredArgsConstructor
 public class ExperienceService {
 //    private final Float firstLevelXp = 0f;
@@ -31,9 +31,10 @@ public class ExperienceService {
     @Value("${experience.level.start.0is1}")
     private boolean startLevelIs0;
 
-    private Integer startLevel = startLevelIs0 ? 0 : 1;
+    public final Integer startLevel = startLevelIs0 ? 0 : 1;
 
     //TODO: Теперь custom при выходе за мапу уровней начинает считать, что каждый уровень стоит levelStep xp.
+    //TODO: Поправить linear, exp, чтобы был правильный подсчет.
     public UserEntity updateLevel(UserEntity user) {
         int level = user.getLevel();
         float xp = user.getXp();
@@ -80,20 +81,21 @@ public class ExperienceService {
         switch (type) {
             case LINEAR -> {
                 return (sumLevelXp + prevLevelXp + 2 * levelStep <= userData.getSecond())
-                        ? calcLevel(type, lvl++,prevLevelXp + levelStep, sumLevelXp + prevLevelXp + levelStep, userData)
-                        : Pair.of(lvl++, Pair.of(prevLevelXp + levelStep, sumLevelXp + prevLevelXp + levelStep));
+                        ? calcLevel(type, ++lvl,prevLevelXp + levelStep, sumLevelXp + prevLevelXp + levelStep, userData)
+                        : Pair.of(lvl, Pair.of(prevLevelXp + levelStep, sumLevelXp + prevLevelXp + levelStep));
             }
             //                                  lvl:2   xp:800
             //                    prevLevelXp                 sumLevelXp
+            // 0.                      0                          0
             // 1.                     100                        100
-            // 2.                100 + 100 = 200             100 + 200 = 300
-            // 3.                200 + 100 = 300             300 + 300 = 600
-            // 4.                300 + 100 = 400             600 + 400 = 1000
-            // 5.                400 + 100 = 500            1000 + 500 = 1500
+            // 2.                100 + 100 = 200             100 + 200 = 300 (400)
+            // 3.                200 + 100 = 300             300 + 300 = 600 (700)
+            // 4.                300 + 100 = 400             600 + 400 = 1000 (1100)
+            // 5.                400 + 100 = 500            1000 + 500 = 1500 (1600) -> (2200)
             case EXP -> {
                 return (sumLevelXp + prevLevelXp * levelStep * levelStep <= userData.getSecond())
-                    ? calcLevel(type, lvl++,prevLevelXp * levelStep, sumLevelXp + prevLevelXp * levelStep, userData)
-                    : Pair.of(lvl++, Pair.of(prevLevelXp * levelStep, sumLevelXp + prevLevelXp * levelStep));
+                    ? calcLevel(type, ++lvl,prevLevelXp * levelStep, sumLevelXp + prevLevelXp * levelStep, userData)
+                    : Pair.of(lvl, Pair.of(prevLevelXp * levelStep, sumLevelXp + prevLevelXp * levelStep));
             }
             //                                  lvl:2   xp:800
             //                    prevLevelXp                 sumLevelXp
@@ -106,7 +108,7 @@ public class ExperienceService {
                 return (sumLevelXp + prevLevelXp <= userData.getSecond())
                         ? calcLevel(type, lvl++, (levelMap[0].containsKey(lvl++) ? levelMap[0].get(lvl++) : levelStep),
                         sumLevelXp + prevLevelXp, userData, levelMap)
-                        : Pair.of(lvl++, Pair.of(prevLevelXp, sumLevelXp + prevLevelXp));
+                        : Pair.of(lvl, Pair.of(prevLevelXp, sumLevelXp + prevLevelXp));
             }
             //            {0:0, 1:1000, 2:1500, 3:2000, 4:2500, 5:5000, 1-10:1000}
             //                                  lvl:2   xp:4600
@@ -119,11 +121,4 @@ public class ExperienceService {
         }
         return Pair.of(userData.getFirst(), Pair.of(prevLevelXp, sumLevelXp)); //TODO: Изменить prevLevelXp и sumLevelXp на что-то типа null или значений опыта юзера
     }
-
-    public void setLevelProperties(LevelStepType levelStepType, Float levelStep, Float startLevel, UserEntity user) {
-        this.levelStepType = levelStepType;
-        this.startXp = startLevel;
-        this.levelStep = levelStep;
-    }
-
 }

@@ -34,8 +34,4 @@ public class ExperienceRestControllerV1 {
         return rewardService.registerReward(rewardMapper.map(dto), customPrincipal.getId());
     }
 
-    @PostMapping("/registerRewardReason")
-    public void reg(){
-        //TODO
-    }
 }
