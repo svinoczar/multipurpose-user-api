@@ -12,7 +12,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import java.time.OffsetDateTime;
 
 @Data
-@Table(name = "ratings")
+@Table(name = "scores")
 @Builder( toBuilder = true )
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,5 +25,6 @@ public class ScoreEntity {
     private Long ratedUserId;
     @JoinColumn(name = "valuer_id")
     private Long valuerId;
-    private OffsetDateTime receivedAt;
+    private OffsetDateTime createdAt;
+    private OffsetDateTime updatedAt;
 }

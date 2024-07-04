@@ -26,6 +26,8 @@ public class UserEntity {
 
     private Float xp;
     private Integer level;
+    private Float score;
+    private Integer scoresCount;
 
     private boolean enabled;
     private OffsetDateTime createdAt;

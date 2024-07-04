@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Data
 @NoArgsConstructor
@@ -18,7 +19,7 @@ import java.time.LocalDateTime;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Response {
     private String message;
-    private LocalDateTime timeStamp;
+    private OffsetDateTime timeStamp;
     private int statusCode;
     @JsonIgnore
     private String devMessage;

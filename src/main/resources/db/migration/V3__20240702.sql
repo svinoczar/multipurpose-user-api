@@ -14,8 +14,10 @@ CREATE TABLE IF NOT EXISTS users (
 
     xp FLOAT NOT NULL DEFAULT 0,
     level INTEGER NOT NULL DEFAULT 0,
-    score FLOAT DEFAULT NULL
+    score FLOAT DEFAULT NULL,
+    scores_count INTEGER DEFAULT 0
 );
+
 CREATE TABLE IF NOT EXISTS rewards (
     id SERIAL PRIMARY KEY,
     value BIGINT NOT NULL,
@@ -37,10 +39,11 @@ CREATE TABLE IF NOT EXISTS reward_reasons (
   updated_at TIMESTAMP WITH TIME ZONE
 );
 
-CREATE TABLE IF NOT EXISTS ratings (
+CREATE TABLE IF NOT EXISTS scores (
     id SERIAL PRIMARY KEY,
     value INTEGER NOT NULL,
     rated_user_id SERIAL references users(id),
     valuer_id SERIAL references users(id),
-    received_at TIMESTAMP WITH TIME ZONE
+    created_at TIMESTAMP WITH TIME ZONE,
+    updated_at TIMESTAMP WITH TIME ZONE
 );

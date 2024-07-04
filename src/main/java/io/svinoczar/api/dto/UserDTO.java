@@ -22,6 +22,8 @@ public class UserDTO {
 
     private Float xp;
     private Integer level;
+    private Float score;
+    private Integer scoresCount;
 
     private String firstName;
     private String lastName;

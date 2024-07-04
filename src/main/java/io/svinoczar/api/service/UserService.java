@@ -35,6 +35,7 @@ public class UserService {
     }
 
     public Mono<UserEntity> updateUser(UserEntity user) {
+        log.info("user updating...");
         return userRepository.save(
                 user.toBuilder()
                         .username(user.getUsername())
@@ -45,6 +46,8 @@ public class UserService {
                         .xp(user.getXp())
                         .level(user.getLevel())
                         .enabled(user.isEnabled())
+                        .score(user.getScore())
+                        .scoresCount(user.getScoresCount())
                         .updatedAt(OffsetDateTime.now())
                         .build()
         ).doOnSuccess(u -> {
