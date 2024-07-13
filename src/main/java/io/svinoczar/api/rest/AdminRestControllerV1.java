@@ -7,6 +7,7 @@ import io.svinoczar.api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 @RestController
 @Slf4j
@@ -16,7 +17,7 @@ public class AdminRestControllerV1 {
     private UserService userService;
 
     @PostMapping("/rewardReason/add")
-    public Response regRR(@RequestBody RewardRequestDTO reward){
+    public Mono<Response> regRR(@RequestBody RewardRequestDTO reward){
         //TODO
         return null;
     }
