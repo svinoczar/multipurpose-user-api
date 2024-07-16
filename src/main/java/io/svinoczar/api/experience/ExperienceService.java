@@ -1,10 +1,8 @@
 package io.svinoczar.api.experience;
 
 import io.svinoczar.api.entity.UserEntity;
-import io.svinoczar.api.exception.ZeroXPStartValueError;
-import lombok.AllArgsConstructor;
+import io.svinoczar.api.exception.ZeroXPStartValueException;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,57 +37,72 @@ public class ExperienceService {
     @Value("${experience.level.start.0is1}")
     private boolean startLevelIs0;
 
-    public final Integer startLevel = startLevelIs0 ? 0 : 1;
+    public final Integer startLevel = startLevelIs0 ? 1 : 0; //FIXME: ЧЗХ!? true = 0... оно работает наоборот...
 
     //TODO: Теперь custom при выходе за мапу уровней начинает считать, что каждый уровень стоит levelStep xp.
     public UserEntity updateLevel(UserEntity user) {
-        int level = user.getLevel();
-        float xp = user.getXp();
-        Pair<Integer, Float> levelXp = Pair.of(level, xp) ;
+        log.info("!!startLevel = " + startLevel + " (startLevelIs0 = {})", startLevelIs0);
+        int currentLVL = user.getLevel();
+        float currentXP = user.getXp();
+        Pair<Integer, Float> levelXp = Pair.of(currentLVL, currentXP) ;
 
         switch (levelStepType) {
-            case MONO ->  user.setLevel((int) (xp / levelStep)); //DONE
+            case MONO ->  user.setLevel((int) (currentXP / levelStep)); //DONE
             case LINEAR -> {
-                float currentXP = startXp;
-                int currentLVL = startLevel;
+                int level = startLevel;
+                float xp = startXp;
                 float nextXp = levelStep;
-                while ((currentXP + nextXp) <= xp){
-                    currentXP += nextXp;
+                while ((xp + nextXp) <= currentXP){
+                    xp += nextXp;
                     nextXp += levelStep;
-                    currentLVL++;
+                    level++;
                 }
-                user.setLevel(currentLVL);
+                user.setLevel(level);
             } //DONE
 
             case EXP -> {
-                if (startXp != 0) {
-                    int currentLVL = startLevel;
-                    float multiplier = levelStep;
-                    float requiredXP = startXp * multiplier;
-
-                    while (requiredXP <= xp) {
-                        currentLVL++;
-                        requiredXP += (float) (startXp * Math.pow(multiplier, currentLVL - 1));
-                    }
-                    user.setLevel(currentLVL);
-                } else {
-                    throw new ZeroXPStartValueError(
+                if (startXp == 0) {
+                    throw new ZeroXPStartValueException(
                             "The initial value of experience must be greater than zero when `experience.level.step.type` = EXP",
                             "XP/EXP/0");
-                } //TODO: В целом кажется готово, но следует хорошенько протестить + возможно обработать исключение.
-            }
+
+                }
+                int level = startLevel;
+                float multiplier = levelStep;
+                float requiredXP = startXp * multiplier;
+                while (requiredXP <= currentXP) {
+                    level++;
+                    requiredXP += (float) (startXp * Math.pow(multiplier, level - 1));
+                }
+                user.setLevel(level);
+                } //DONE
 
             case CUSTOM ->  {
                 Map<Integer, Float> levelMap = handleCustomLevelStep(custom);
-                user.setLevel(calcLevel(levelStepType, startLevel, levelMap.get(startLevel), levelMap.get(startLevel), levelXp, levelMap));
-            } //DONE
-            default -> user.setLevel(level);
+                log.info("levelMap: " + levelMap);
+                float xp = startXp;
+                Pair<Integer, Float> prevItem = Pair.of(currentLVL, currentXP);
+                for (Map.Entry<Integer, Float> entry : levelMap.entrySet()) {
+                    int key = entry.getKey();
+                    float value = entry.getValue();
+                    xp += value;
+                    if (currentXP < xp) {
+                        user.setLevel(prevItem.getFirst());
+                        break;
+                    } else if (currentXP == xp) {
+                        user.setLevel(key);
+                        break;
+                    }
+                    prevItem = Pair.of(key, value);
+                }
+            } //DONE!
+            default -> user.setLevel(currentLVL);
         }
         return user;
     }
 
-    private Map<Integer, Float> handleCustomLevelStep(String custom) {
         //TODO: Реализовать обработку случаев типа 5-10:alt
+    private Map<Integer, Float> handleCustomLevelStep(String custom) {
         return Arrays.stream(custom
                         .replaceAll("[{}]", "")
                         .strip()
@@ -99,37 +112,5 @@ public class ExperienceService {
                         keyValue -> Integer.parseInt(keyValue[0]),
                         keyValue -> Float.parseFloat(keyValue[1])
                 ));
-    }
-
-    private int sum (Integer numb) {
-        int sum = 0;
-        for (int i = 1; i < numb; i++) {
-            sum += i;
-        }
-        return sum;
-    }
-
-
-    /**
-     * @param type Level step type (LevelStepType enum)
-     * @param lvl
-     * @param prevLevelXp
-     * @param sumLevelXp
-     * @param userData Pair of user's level and xp
-     * @param levelMap Map of level-xp pairs
-     * */
-    private Integer calcLevel(LevelStepType type, Integer lvl,
-                                                        Float prevLevelXp, Float sumLevelXp,
-                                                        Pair<Integer, Float> userData, Map<Integer, Float>... levelMap) {
-
-        switch (type) {
-            case CUSTOM -> {
-                return (sumLevelXp + prevLevelXp <= userData.getSecond())
-                        ? calcLevel(type, lvl++, (levelMap[0].containsKey(lvl++) ? levelMap[0].get(lvl++) : levelStep),
-                        sumLevelXp + prevLevelXp, userData, levelMap)
-                        : lvl;
-            }
-        }
-        return lvl;
     }
 }
