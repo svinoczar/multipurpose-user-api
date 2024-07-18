@@ -2,6 +2,7 @@ package io.svinoczar.api.experience;
 
 import io.svinoczar.api.entity.UserEntity;
 import io.svinoczar.api.exception.ZeroXPStartValueException;
+import io.svinoczar.api.service.FileService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,6 @@ import java.util.stream.Collectors;
 @Getter
 @RequiredArgsConstructor
 public class ExperienceService {
-//    private final Float firstLevelXp = 0f;
     @Value("${experience.level.step.type}")
     private LevelStepType levelStepType;
     @Value("${experience.level.step.value}")
@@ -37,11 +37,12 @@ public class ExperienceService {
     @Value("${experience.level.start.0is1}")
     private boolean startLevelIs0;
 
-    public final Integer startLevel = startLevelIs0 ? 1 : 0; //FIXME: ЧЗХ!? true = 0... оно работает наоборот...
+    private final Integer startLevel = startLevelIs0 ? 1 : 0; //FIXME: ЧЗХ!? true = 0... оно работает наоборот...
+    private final FileService fileService;
 
     //TODO: Теперь custom при выходе за мапу уровней начинает считать, что каждый уровень стоит levelStep xp.
     public UserEntity updateLevel(UserEntity user) {
-        log.info("!!startLevel = " + startLevel + " (startLevelIs0 = {})", startLevelIs0);
+        log.debug("!!startLevel = " + startLevel + " (startLevelIs0 = {})", startLevelIs0);
         int currentLVL = user.getLevel();
         float currentXP = user.getXp();
         Pair<Integer, Float> levelXp = Pair.of(currentLVL, currentXP) ;
@@ -79,7 +80,7 @@ public class ExperienceService {
 
             case CUSTOM ->  {
                 Map<Integer, Float> levelMap = handleCustomLevelStep(custom);
-                log.info("levelMap: " + levelMap);
+                log.debug("levelMap: " + levelMap);
                 float xp = startXp;
                 Pair<Integer, Float> prevItem = Pair.of(currentLVL, currentXP);
                 for (Map.Entry<Integer, Float> entry : levelMap.entrySet()) {
@@ -103,6 +104,11 @@ public class ExperienceService {
 
         //TODO: Реализовать обработку случаев типа 5-10:alt
     private Map<Integer, Float> handleCustomLevelStep(String custom) {
+        if (custom.isBlank()) {
+            custom = fileService.readFileFromResources(".custom");
+        } else if (custom.endsWith(".custom")) {
+            custom = fileService.readFileFromResources(custom);
+        }
         return Arrays.stream(custom
                         .replaceAll("[{}]", "")
                         .strip()

@@ -3,15 +3,14 @@ package io.svinoczar.api.service;
 import io.svinoczar.api.entity.UserEntity;
 import io.svinoczar.api.entity.UserRole;
 import io.svinoczar.api.repository.UserRepository;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
+
 
 @Slf4j
 @Service
@@ -30,12 +29,12 @@ public class UserService {
                         .updatedAt(OffsetDateTime.now())
                         .build()
         ).doOnSuccess(u -> {
-            log.info("user: {} created in `registerUser`", u);
+            log.info("USER: (id={}, username={}) REGISTERED.", u.getId(), u.getUsername());
         });
     }
 
     public Mono<UserEntity> updateUser(UserEntity user) {
-        log.info("user updating...");
+        log.info("USER UPDATING...");
         return userRepository.save(
                 user.toBuilder()
                         .username(user.getUsername())
@@ -51,7 +50,7 @@ public class UserService {
                         .updatedAt(OffsetDateTime.now())
                         .build()
         ).doOnSuccess(u -> {
-            log.info("USER: (id={}, username={}) UPDATED.", u.getId(), u.getUsername());
+            log.info("USER (id={}, username={}) UPDATED.", u.getId(), u.getUsername());
         });
     }
 

@@ -1,22 +1,19 @@
 package io.svinoczar.api.service;
 
-import io.r2dbc.spi.Parameter;
-import io.svinoczar.api.dto.RewardResponseDTO;
 import io.svinoczar.api.entity.Response;
-import io.svinoczar.api.entity.RewardEntity;
 import io.svinoczar.api.entity.ScoreEntity;
 import io.svinoczar.api.entity.UserEntity;
 import io.svinoczar.api.repository.ScoreRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 import java.time.OffsetDateTime;
-import java.util.Objects;
+
 
 @Slf4j
 @Service
@@ -51,7 +48,7 @@ public class ScoreService {
                                                                 (float) prevScoreSum / (count) :
                                                                 score.getValue();
                                                         user.setScore(currentScore);
-                                                        log.info("USER SCORE = {}", user);
+//                                                        log.info("USER SCORE = {}", user);
                                                         return (UserEntity) user;
                                                     })
                                                     .flatMap(userService::updateUser);
@@ -63,8 +60,6 @@ public class ScoreService {
                                             .message("USER WAS RATED SUCCESSFULLY")
                                             .statusCode(HttpStatus.CREATED.value())
                                             .build());
-
                 });
     }
-
 }

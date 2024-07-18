@@ -79,7 +79,7 @@ public class RewardService {
                         .isVisible(true)
                         .build()
         ).doOnSuccess(u -> {
-            log.info("user: {} updated in `updateUser`", u);
+            log.debug("user: {} updated in `updateUser`", u);
         });
     }
 
