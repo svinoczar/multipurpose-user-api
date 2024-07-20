@@ -11,6 +11,7 @@ import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -37,10 +38,11 @@ public class ExperienceService {
     @Value("${experience.level.start.0is1}")
     private boolean startLevelIs0;
 
-    private final Integer startLevel = startLevelIs0 ? 1 : 0; //FIXME: ЧЗХ!? true = 0... оно работает наоборот...
+    private final Integer startLevel = startLevelIs0 ? 1 : 0; //FIXME: ЧЗХ!? true = 0... оно работает наоборот... как оно вообще работает...
     private final FileService fileService;
 
-    //TODO: Теперь custom при выходе за мапу уровней начинает считать, что каждый уровень стоит levelStep xp.
+
+    //TODO: Позже протестировать на всех level.type отрицательное количество опыта.
     public UserEntity updateLevel(UserEntity user) {
         log.debug("!!startLevel = " + startLevel + " (startLevelIs0 = {})", startLevelIs0);
         int currentLVL = user.getLevel();
@@ -83,6 +85,10 @@ public class ExperienceService {
                 log.debug("levelMap: " + levelMap);
                 float xp = startXp;
                 Pair<Integer, Float> prevItem = Pair.of(currentLVL, currentXP);
+                Map.Entry<Integer, Float> levelMapLastElement = levelMap.entrySet().stream().skip(levelMap.size()-1).findFirst().get();
+                int lastDeclaredLevel = levelMapLastElement.getKey();
+                float lastDeclaredXp = levelMapLastElement.getValue();
+
                 for (Map.Entry<Integer, Float> entry : levelMap.entrySet()) {
                     int key = entry.getKey();
                     float value = entry.getValue();
@@ -96,27 +102,46 @@ public class ExperienceService {
                     }
                     prevItem = Pair.of(key, value);
                 }
-            } //DONE!
+                log.info("prevItem: " + prevItem + ", xp: " + xp + ", currentXp: " + currentXP);
+                if (currentXP > xp) {
+                    user.setLevel(lastDeclaredLevel + (int) ((currentXP - xp) / levelStep));
+                }
+            }
             default -> user.setLevel(currentLVL);
         }
         return user;
     }
 
-        //TODO: Реализовать обработку случаев типа 5-10:alt
-    private Map<Integer, Float> handleCustomLevelStep(String custom) {
-        if (custom.isBlank()) {
-            custom = fileService.readFileFromResources(".custom");
-        } else if (custom.endsWith(".custom")) {
-            custom = fileService.readFileFromResources(custom);
+        private Map<Integer, Float> handleCustomLevelStep(String custom) {
+            if (custom.isBlank()) {
+                custom = fileService.readFileFromResources(".custom");
+            } else if (custom.endsWith(".custom")) {
+                custom = fileService.readFileFromResources(custom);
+            }
+
+            Map<Integer, Float> result = new HashMap<>();
+
+            Arrays.stream(custom
+                            .replaceAll("[{}]", "")
+                            .strip()
+                            .split(", "))
+                    .forEach(element -> {
+                        if (element.contains("-")) {
+                            String[] parts = element.split(":");
+                            float value = Float.parseFloat(parts[1]);
+                            String[] rangeSplit = parts[0].split("-");
+                            int start = Integer.parseInt(rangeSplit[0]);
+                            int end = Integer.parseInt(rangeSplit[1]);
+                            for (int i = start; i <= end; i++) {
+                                result.put(i, value);
+                            }
+                        } else {
+                            String[] keyValue = element.split(":");
+                            int key = Integer.parseInt(keyValue[0]);
+                            float value = Float.parseFloat(keyValue[1]);
+                            result.put(key, value);
+                        }
+                    });
+            return result;
         }
-        return Arrays.stream(custom
-                        .replaceAll("[{}]", "")
-                        .strip()
-                        .split(", "))
-                .map(element -> element.split(":"))
-                .collect(Collectors.toMap(
-                        keyValue -> Integer.parseInt(keyValue[0]),
-                        keyValue -> Float.parseFloat(keyValue[1])
-                ));
-    }
 }
