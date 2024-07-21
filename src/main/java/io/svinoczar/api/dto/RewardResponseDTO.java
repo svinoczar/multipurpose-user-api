@@ -8,8 +8,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.OffsetDateTime;
 
 @Data
@@ -20,7 +18,8 @@ public class RewardResponseDTO extends Response {
     private Float value;
     private RewardReason reason;
     private String rewardedUserName;
-    private OffsetDateTime receivedAt;
+    private OffsetDateTime createdAt;
+    private OffsetDateTime updatedAt;
     private boolean valid;
     private boolean isVisible;
 }

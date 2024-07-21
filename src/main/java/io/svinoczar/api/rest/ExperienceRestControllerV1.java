@@ -23,8 +23,8 @@ public class ExperienceRestControllerV1 {
     @PostMapping("/testReward")
     public Mono<RewardResponseDTO> testReward(@RequestBody RewardDTO dto, Authentication authentication) {
         CustomPrincipal customPrincipal = (CustomPrincipal) authentication.getPrincipal();
-        log.debug("DTO: {}", dto);
-        log.debug("PRINCIPAL: {}", customPrincipal);
+        log.info("DTO: {}", dto);
+        log.info("PRINCIPAL: {}", customPrincipal);
         return rewardService.registerReward(rewardMapper.map(dto), customPrincipal.getId());
     }
 

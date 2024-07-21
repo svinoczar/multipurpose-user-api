@@ -6,7 +6,6 @@ import io.svinoczar.api.entity.RewardReason;
 import lombok.Builder;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
 @Data
@@ -17,7 +16,8 @@ public class RewardDTO {
     private RewardReason reason;
     private String description;
     private Long rewardedUserId;
-    private OffsetDateTime receivedAt;
+    private OffsetDateTime createdAt;
+    private OffsetDateTime updatedAt;
     private boolean valid;
     private boolean isVisible;
 }

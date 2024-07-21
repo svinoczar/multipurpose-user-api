@@ -7,7 +7,6 @@ import org.springframework.data.relational.core.mapping.Table;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
 @Data
@@ -24,7 +23,8 @@ public class RewardEntity {
     @ManyToOne
     @JoinColumn(name = "rewarded_user_id")
     private Long rewardedUserId;
-    private OffsetDateTime receivedAt;
+    private OffsetDateTime createdAt;
+    private OffsetDateTime updatedAt;
     private boolean valid;
     private boolean isVisible;
 }

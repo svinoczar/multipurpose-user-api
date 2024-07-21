@@ -9,10 +9,12 @@ import io.svinoczar.api.security.CustomPrincipal;
 import io.svinoczar.api.security.SecurityService;
 import io.svinoczar.api.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
@@ -44,8 +46,8 @@ public class AuthRestControllerV1 {
     @GetMapping("/info")
     public Mono<UserDTO> getUserInfo(Authentication authentication) {
         CustomPrincipal customPrincipal = (CustomPrincipal) authentication.getPrincipal();
-//        System.out.println(customPrincipal.getId());
-//        System.out.println(userService.getUserById(customPrincipal.getId()));
+        log.debug(customPrincipal.getId().toString());
+        log.debug(userService.getUserById(customPrincipal.getId()).toString());
         return userService.getUserById(customPrincipal.getId())
                 .map(userMapper::map);
     }

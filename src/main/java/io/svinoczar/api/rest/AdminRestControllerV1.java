@@ -9,8 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
-@RestController
 @Slf4j
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/admin")
 public class AdminRestControllerV1 {
@@ -26,4 +26,5 @@ public class AdminRestControllerV1 {
     public void rmRR(){
         //TODO
     }
+
 }
