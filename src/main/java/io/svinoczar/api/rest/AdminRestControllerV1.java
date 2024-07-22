@@ -16,15 +16,6 @@ import reactor.core.publisher.Mono;
 public class AdminRestControllerV1 {
     private UserService userService;
 
-    @PostMapping("/rewardReason/add")
-    public Mono<Response> regRR(@RequestBody RewardRequestDTO reward){
-        //TODO
-        return null;
-    }
 
-    @DeleteMapping("/rewardReason/rm")
-    public void rmRR(){
-        //TODO
-    }
 
 }

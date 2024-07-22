@@ -3,6 +3,7 @@ package io.svinoczar.api.service;
 import io.svinoczar.api.entity.UserEntity;
 import io.svinoczar.api.entity.UserRole;
 import io.svinoczar.api.repository.UserRepository;
+import io.svinoczar.api.security.CustomPrincipal;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -61,5 +62,13 @@ public class UserService {
 
     public Mono<UserEntity> getUserByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    public UserRole getUserRole(CustomPrincipal principal) {
+        try {
+            return userRepository.getRoleById(principal.getId());
+        } catch (Exception e) {
+            return userRepository.getRoleByUsername(principal.getName());
+        }
     }
 }

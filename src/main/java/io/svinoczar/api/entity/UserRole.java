@@ -1,14 +1,18 @@
 package io.svinoczar.api.entity;
 
 public enum UserRole {
-    USER("user"),
-    ADMIN("admin");
+    USER(1, "user"),
+    ADMIN(2, "admin");
 
+    private final Integer value;
     private final String name;
 
-    UserRole(String name) {
+    UserRole(Integer value, String name) {
+        this.value = value;
         this.name = name;
     }
+
+    public Integer status() {return value;}
 
     @Override
     public String toString() {

@@ -17,7 +17,7 @@ public class RewardReasonEntity {
     @Id
     private Long id;
     @NonNull
-    private RewardReason reason;
+    private String reason;
     private String stringName;
     private String description;
     private RewardReasonType type;

@@ -3,13 +3,8 @@ package io.svinoczar.api.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatus;
+import lombok.*;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
 @Data
@@ -18,11 +13,11 @@ import java.time.OffsetDateTime;
 @Builder(toBuilder = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Response {
-    private String message;
-    private OffsetDateTime timeStamp;
-    private int statusCode;
+    protected String message;
+    protected OffsetDateTime timeStamp;
+    protected int statusCode;
     @JsonIgnore
-    private String devMessage;
+    protected String devMessage;
     @JsonIgnore
-    private String username;
+    protected String username;
 }
