@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
 import java.time.OffsetDateTime;
 
 @Data
-@Builder(builderMethodName = "rewardResponseBuilder", toBuilder = true)
+@Builder(builderMethodName = "rewardResponseBuilder")
 @EqualsAndHashCode(callSuper = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class RewardResponseDTO extends Response {

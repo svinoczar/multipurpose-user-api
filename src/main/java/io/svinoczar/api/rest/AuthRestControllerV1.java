@@ -10,8 +10,10 @@ import io.svinoczar.api.security.SecurityService;
 import io.svinoczar.api.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Mono;
 
 @Slf4j
@@ -50,5 +52,10 @@ public class AuthRestControllerV1 {
         log.debug(userService.getUserById(customPrincipal.getId()).toString());
         return userService.getUserById(customPrincipal.getId())
                 .map(userMapper::map);
+    }
+
+    @GetMapping("/get/{username}")
+    public Mono<UserDTO> getUser(@PathVariable("username") String username) {
+        return userService.getUserByUsername(username).map(userMapper::map);
     }
 }

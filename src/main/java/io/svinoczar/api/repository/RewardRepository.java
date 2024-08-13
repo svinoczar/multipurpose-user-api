@@ -9,4 +9,5 @@ import reactor.core.publisher.Mono;
 
 public interface RewardRepository extends R2dbcRepository<RewardEntity, Long> {
         Mono<RewardEntity> findAllByReason(RewardReason reason);
+        Mono<RewardEntity> findById(Long id);
 }

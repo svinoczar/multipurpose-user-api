@@ -1,5 +1,6 @@
 package io.svinoczar.api.service;
 
+import io.svinoczar.api.entity.Response;
 import io.svinoczar.api.entity.UserEntity;
 import io.svinoczar.api.entity.UserRole;
 import io.svinoczar.api.repository.UserRepository;
@@ -32,6 +33,25 @@ public class UserService {
         ).doOnSuccess(u -> {
             log.info("USER: (id={}, username={}) REGISTERED.", u.getId(), u.getUsername());
         });
+    }
+
+    public Mono<UserEntity> registerUser(UserEntity user, boolean accessFlag) {
+        if (accessFlag) {
+            return userRepository.save(
+                    user.toBuilder()
+                            .password(passwordEncoder.encode(user.getPassword()))
+                            .userRole(UserRole.ADMIN)
+                            .enabled(true)
+                            .createdAt(OffsetDateTime.now())
+                            .updatedAt(OffsetDateTime.now())
+                            .build()
+            ).doOnSuccess(u -> {
+                log.info("USER: (id={}, username={}) REGISTERED.", u.getId(), u.getUsername());
+            });
+        } else {
+            log.warn("ADMINISTRATOR REGISTRATION IS FORBIDDEN.");
+        }
+        return Mono.just(UserEntity.builder().username("FORBIDDEN").build());
     }
 
     public Mono<UserEntity> updateUser(UserEntity user) {

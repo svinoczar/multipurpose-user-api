@@ -62,6 +62,7 @@ public class RewardService {
     }
 
 
+    //TODO: переписать (сейчас добавляется новый ревард, а не меняется старый)
     public Mono<RewardResponseDTO> updateReward(RewardEntity reward, UserRole role) {
         if (role.status() >= 2) {
             log.info("REWARD UPDATING...");
@@ -102,6 +103,7 @@ public class RewardService {
 
 
     public Mono<RewardResponseDTO> deleteReward(RewardEntity reward, UserRole role) {
+        log.info(role.toString());
         if (role.status() >= 2) {
             return rewardRepository.deleteById(reward.getId()).flatMap(r -> Mono.just(
                 RewardResponseDTO.rewardResponseBuilder()
